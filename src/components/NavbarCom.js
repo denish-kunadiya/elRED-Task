@@ -13,10 +13,10 @@ const NavbarCom = () => {
       <Navbar
         collapseOnSelect
         expand="lg"
-        className="nav px-3 navbar-custom"
+        className="nav px-3 text-dark"
         // style={{ position: "relative !important", zIndex: "100 !important" }}
       >
-        <Navbar.Brand href="#home" className="ps-0 text-light">
+        <Navbar.Brand href="#home" className="ps-0 text-dark">
           {/* <img src="/assets/img/tbaconsulting.png"></img> */}
           LOGO
         </Navbar.Brand>
@@ -28,9 +28,9 @@ const NavbarCom = () => {
               <div
                 className={`${
                   pathName == "/perfil" && "Nav-after"
-                } text-white d-flex align-items-center`}
+                } d-flex align-items-center text-dark`}
               >
-                <Nav.Link>
+                <Nav.Link className="text-dark">
                   <img
                     className={`${pathName == "/perfil" && "Imgborder"}`}
                     src={"assets/img/noUser.png"}

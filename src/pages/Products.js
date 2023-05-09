@@ -6,6 +6,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { connect } from "react-redux";
 import * as productActions from "../redux/products/action";
 import ProductList from "../components/Products/ProductList";
+import Sidebar from "../components/Sidebar";
+import ProductSlider from "../components/ProductSlider";
+import SubCategories from "../components/Categories/SubCategories";
 
 const Products = ({ getProducts }) => {
   const params = useLocation();
@@ -25,18 +28,36 @@ const Products = ({ getProducts }) => {
   return (
     <AfterAuth>
       <Row>
-        <Col md={8}>
-          <CardElement>
-            <Row className="scrolling_wrapper">
-              <ProductList />
-            </Row>
-            {/* <Row className="">
-              <SubCategories />
-            </Row> */}
-          </CardElement>
+        <Col md={9}>
+          <Row>
+            <Col style={{ padding: "0px" }} md={3}>
+              <Card style={{ height: "65vh" }}>
+                <Sidebar />
+              </Card>
+            </Col>
+            <Col md={9} className="px-2">
+              <CardElement height={"65vh"}>
+                <Row
+                  className="scrolling_wrapper overflow-auto"
+                  style={{ height: "60vh" }}
+                >
+                  <ProductList />
+                </Row>
+              </CardElement>
+            </Col>
+            <Col md={12} className="py-2 px-0">
+              <Card style={{ height: "14vh" }}>
+                <ProductSlider />
+
+                {/* <SubCategories /> */}
+              </Card>
+            </Col>
+          </Row>
         </Col>
-        <Col md={4}>
-          <CardElement>hello this is card</CardElement>
+        <Col md={3} className="px-2">
+          <Card style={{ height: "80vh" }}>
+            <CardElement>hello this is card</CardElement>
+          </Card>
         </Col>
       </Row>
     </AfterAuth>

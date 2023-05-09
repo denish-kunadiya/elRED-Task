@@ -26,23 +26,29 @@ const SubCategories = ({ subCategoriesList, loading }) => {
         <Loader />
       ) : subCategories?.length ? (
         subCategories?.map((obj, index) => (
-          <Col md={4} onClick={() => handleProduct(obj?.subCategoryId)}>
-            <Card className="" style={{ width: "auto" }}>
-              <Card.Img
-                src={
-                  obj?.subCategoryImageURL
-                    ? obj?.subCategoryImageURL
-                    : DEFAULT_IMAGE
-                }
-                alt="Card image"
-              />
-              <Card.ImgOverlay className="sub_category_overlay">
-                <Card.Body className="sub_category_heading">
-                  {obj?.subCategoryName}
-                </Card.Body>
-              </Card.ImgOverlay>
-            </Card>
-          </Col>
+          <>
+            <Col
+              md={3}
+              className="me-5 sub_category_col"
+              onClick={() => handleProduct(obj?.subCategoryId)}
+            >
+              <Card className="">
+                <Card.Img
+                  src={
+                    obj?.subCategoryImageURL
+                      ? obj?.subCategoryImageURL
+                      : DEFAULT_IMAGE
+                  }
+                  alt="Card image"
+                />
+                <Card.ImgOverlay className="sub_category_overlay">
+                  <Card.Body className="sub_category_heading">
+                    {obj?.subCategoryName}
+                  </Card.Body>
+                </Card.ImgOverlay>
+              </Card>
+            </Col>
+          </>
         ))
       ) : (
         <RecordFound label="No Sub Category Found" />

@@ -11,7 +11,7 @@ var settings = {
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 4,
+  slidesToShow: 6,
   slidesToScroll: 4,
   initialSlide: 0,
   responsive: [
@@ -42,7 +42,12 @@ var settings = {
   ],
 };
 
-const Responsive = ({ allCategories, setSelectCategory, loading }) => {
+const Responsive = ({
+  allCategories,
+  setSelectCategory,
+  selectCategory,
+  loading,
+}) => {
   const [categories, setCategories] = useState(allCategories);
 
   useEffect(() => {
@@ -63,21 +68,37 @@ const Responsive = ({ allCategories, setSelectCategory, loading }) => {
           <Loader />
         ) : categories?.length ? (
           categories?.map((obj, index) => (
-            <Col md={3} onClick={() => setSelectCategory(obj?.categoryId)}>
-              <Card className="scrollable_card" style={{ width: "auto" }}>
+            <Col onClick={() => setSelectCategory(obj?.categoryId)}>
+              <Card
+                className={
+                  selectCategory === obj?.categoryId
+                    ? "scrollable_card border_selected"
+                    : "scrollable_card border-none"
+                }
+              >
                 <Card.Img
                   src={
                     obj?.categoryImageURL
                       ? obj?.categoryImageURL
                       : DEFAULT_IMAGE
                   }
-                  alt="Card image"
+                  alt="category"
+                  className={
+                    selectCategory === obj?.categoryId
+                      ? "selected_category_img "
+                      : "category_img"
+                  }
                   onClick={() => setSelectCategory(obj?.categoryId)}
-                  style={{ height: "150px" }}
                 />
 
                 <Card.ImgOverlay className="main_category_overlay">
-                  <Card.Body className="main_category_heading">
+                  <Card.Body
+                    className={
+                      obj?.categoryImageURL
+                        ? "main_category_heading text-light text-center"
+                        : "main_category_heading text-dark text-center"
+                    }
+                  >
                     {obj?.categoryName}
                   </Card.Body>
                 </Card.ImgOverlay>

@@ -9,41 +9,58 @@ import * as subCategoryAction from "../redux/subCategory/action";
 import { connect } from "react-redux";
 import { DEFAULT_IMAGE } from "../config";
 import SubCategories from "../components/Categories/SubCategories";
+import Sidebar from "../components/Sidebar";
 
 const Contact = ({ getCategories, getSubCategories }) => {
-  const [SelectCategory, setSelectCategory] = useState("");
+  const [selectCategory, setSelectCategory] = useState("");
   useEffect(() => {
     getCategories().then((res) => {
       console.log("res", res);
     });
-    // getSubCategories().then((res) => {
-    //   console.log("res getSubCategories", res);
-    // });
   }, []);
   useEffect(() => {
-    if (SelectCategory) {
-      getSubCategories(SelectCategory).then((res) => {
+    if (selectCategory) {
+      getSubCategories(selectCategory).then((res) => {
         console.log("res getSubCategories", res);
       });
     }
-  }, [SelectCategory]);
+  }, [selectCategory]);
 
-  console.log("SelectCategory", SelectCategory);
+  console.log("selectCategory", selectCategory);
   return (
     <AfterAuth>
       <Row>
-        <Col md={8}>
-          <CardElement>
-            <Row className="scrolling_wrapper">
-              <Responsive setSelectCategory={setSelectCategory} />
-            </Row>
-            <Row className="scrolling_wrapper">
-              <SubCategories />
-            </Row>
-          </CardElement>
+        <Col md={9}>
+          <Row>
+            <Col style={{ padding: "0px" }} md={3}>
+              <Card style={{ height: "80vh" }}>
+                <Sidebar />
+              </Card>
+            </Col>
+            <Col md={9}>
+              <CardElement height={"80vh"}>
+                <Row className="scrolling_wrapper">
+                  <Responsive
+                    setSelectCategory={setSelectCategory}
+                    selectCategory={selectCategory}
+                  />
+                </Row>
+                <Row className="subcategory_wrapper">
+                  <SubCategories />
+                </Row>
+              </CardElement>
+            </Col>
+            {/* <Col md={12}>
+              <Card style={{ height: "10vh" }}>
+                <h3>Hello</h3>
+              </Card>
+            </Col> */}
+          </Row>
         </Col>
-        <Col md={4}>
-          <CardElement>hello this is card</CardElement>
+        <Col md={3}>
+          <Card style={{ height: "80vh" }}>
+            <CardElement>hello this is card</CardElement>
+          </Card>
         </Col>
       </Row>
     </AfterAuth>
@@ -53,8 +70,8 @@ const Contact = ({ getCategories, getSubCategories }) => {
 const mapDispatchToProp = (dispatch) => {
   return {
     getCategories: () => dispatch(categoryAction.getMainCategories()),
-    getSubCategories: (SelectCategory) =>
-      dispatch(subCategoryAction.getSubCategories(SelectCategory)),
+    getSubCategories: (selectCategory) =>
+      dispatch(subCategoryAction.getSubCategories(selectCategory)),
   };
 };
 

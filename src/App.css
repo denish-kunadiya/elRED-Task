@@ -4,6 +4,7 @@
 
 body {
   overflow-x: hidden !important;
+  height: 100vh;
 }
 
 @media (max-width:550px) {
@@ -12,74 +13,7 @@ body {
   }
 }
 
-.Dashboard {
-  min-height: 100vh;
-  width: 100%;
-  background-image: url("../public/assets/img/dashbordIMG.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 100% 100%;
-}
 
-.mainPage {
-  /* animation: show 1s 1s linear; */
-}
-
-/* @keyframes show {
-  from {
-    scale: 1;
-  }
-
-  to {
-    scale: 0;
-  }
-} */
-
-.TBA-Logo {
-  width: 20rem;
-  height: 20rem;
-  background-color: rgba(31, 31, 31, 0.8);
-  border: 2px solid #fff;
-  border-radius: 100%;
-}
-
-.form-control {
-  transition: none !important;
-  box-shadow: none !important;
-  border: 1px solid #ced4da !important;
-  border-left: 0 !important;
-}
-
-.input-group,
-.form-control {
-  background-color: #F4F6F8 !important;
-}
-
-.form-check-input {
-  box-shadow: none !important;
-  border: 1px solid #85A6A2 !important;
-}
-
-.input-group-text {
-  background-color: transparent !important;
-}
-
-.eye-logo {
-  border-right: 0 !important;
-}
-
-.Login {
-  max-height: 80% !important;
-  border-radius: 10px;
-  background-color: #FBFBFB;
-}
-
-.login-enter {
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-  width: fit-content;
-}
 
 /* .login-enter::after {
   content: "";
@@ -98,155 +32,56 @@ body {
   width: 100%;
 } */
 
-.login-btn {
-  background-color: #1C3D59 !important;
-}
-
-.active {
-  color: #000;
-  /* border-bottom: 3px solid #85A6A2 !important; */
-}
-
-.actives {
-  color: #000;
-  border-bottom: 3px solid #85A6A2 !important;
-}
-
-.inactive {
-  color: #CED4DB;
-}
-
-.form-check-input:checked {
-  background-color: #85A6A2 !important;
-}
-
-/* Navbar */
-
-.active-to {
-  background-color: #85A6A2 !important;
-  font-weight: 600 !important;
-}
-
-.nav {
-  position: fixed !important;
-  width: 100vw;
-  top: 0px !important;
-  background: linear-gradient(136.92deg, #151515 21.87%, #000000 82.73%);
-  z-index: 5000 !important;
-}
-
-.Nav-after {
-  position: relative !important;
-
-}
-
-.Imgborder {
-  border: 2px solid #85A6A2;
-}
-
-.Nav-after::after {
-  content: "";
-  position: absolute !important;
-  bottom: 15%;
-  left: 0%;
-  height: 3px;
-  width: 30% !important;
-  background-color: #85A6A2 !important;
-  transition: 200ms;
-}
-
-.nav-search {
-  background: rgb(0, 0, 0) !important;
-}
-
-.nav-items {
-  width: 100vw !important;
-}
-
-.navbar-toggler {
-  background-color: #fff !important;
-}
-
-/* Sidebar */
-
-.border-div {
-  position: relative;
-  top: 30px;
-  width: 50px;
-  border-top: 2px solid rgba(181, 182, 183, 0.2);
-}
-
-.side-line {
-  position: relative;
-}
-
-.side-line::after {
-  content: '';
-  position: absolute;
-  height: 25px;
-  width: 3px;
-  background-color: #85A6A2;
-  top: 0;
-  left: -60px;
-}
-
-
-.contant {
-  margin-top: 87px !important;
-}
-
-.scroll {
-  height: 100vh !important;
-  padding-bottom: 70px;
-  overflow-y: scroll !important;
-}
-
-.T-active {
-  background-color: #85A6A2 !important;
-}
-
-.toggle {
-  height: 100px;
-}
-
-/* yash */
-
-/* Green Color Button */
-.button-green {
-  color: #58A43D;
-  outline: none;
-  border: none;
-  background-color: #fff;
-}
-
-/* Red color Button */
-.button-red {
-  color: #A43D3D;
-  outline: none;
-  border: none !important;
-  background-color: #fff !important;
-}
-
 .scrolling_wrapper {
-  margin: 1rem !important;
+  /* margin: 1rem !important; */
+}
+
+.category_img {
+  border: 2px solid #ffffff !important;
+  height: 6rem;
+  width: 8rem;
+}
+
+.selected_category_img {
+  border: 2px solid #ffffff !important;
+  height: 6.4rem;
+  width: 8rem;
+}
+
+.sub_category_col {
+  margin-bottom: 2.5rem !important;
 }
 
 .scrollable_card {
+  border: 2px solid #ffffff !important;
   margin-right: 1rem !important;
-  /* display: inline-block; */
+}
+
+.border_selected {
+  border: 2px solid red !important;
+
 }
 
 .main_category_heading {
-  color: #ffffff !important;
   font-weight: bolder;
+  font-size: 0.8rem;
 }
 
 .main_category_overlay {
-  top: 50% !important;
+  top: 60% !important;
+  padding: 0 !important;
+}
+
+.subcategory_wrapper {
+  overflow: scroll !important;
+  height: 50vh !important;
+
 }
 
 .sub_category_heading {
-  font-weight: bolder;
+  font-size: 1rem !important;
+  padding: 0 !important;
+  font-weight: 600;
   text-align: center !important;
 }
 
@@ -275,4 +110,8 @@ body {
 
 .Btn0-Blue-BG.active {
   background-color: rgb(9, 7, 8) !important;
+}
+
+.bottom_slider {
+  margin: 1rem;
 }

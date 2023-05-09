@@ -23,5 +23,5 @@ export const BASE_URL = envData(
   "https://elredtest.s3.amazonaws.com/"
 );
 
-export const DEFAULT_IMAGE = "./assets/default.png";
+export const DEFAULT_IMAGE = "/assets/trial.png";
 export default config;
