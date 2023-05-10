@@ -8,8 +8,19 @@ import {
 } from "react-bootstrap";
 import { Form, Row, Col, Image } from "react-bootstrap";
 import { DEFAULT_IMAGE } from "../../config";
+import { toast } from "react-toastify";
+import { getGrossPrice } from "../../utility/functions";
+import * as cartActions from "../../redux/cart/action";
+import { connect } from "react-redux";
+import CartItem from "./CartItem";
 
-const CartModal = ({ open, handleClose, singleProduct }) => {
+const CartModal = ({
+  open,
+  handleClose,
+  singleProduct,
+  addCartItem,
+  cartItemList,
+}) => {
   const [quantity, setQuantity] = useState(12);
   const [urgentOrder, setUrgentOrder] = useState(false);
 
@@ -20,28 +31,6 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
   const handleUrgentOrderChange = (event) => {
     setUrgentOrder(event.target.checked);
   };
-  const [selectColor, setSelectColor] = useState(0);
-  const [selectPackage, setSelectPackage] = useState(0);
-
-  //   console.log("singleProduct", singleProduct);
-  console.log("selectColor", selectColor);
-  console.log("selectPackage", selectPackage);
-
-  const handleAddItem = () => {
-    const matchingProduct = singleProduct.variants.find(
-      (product) =>
-        product.colorDescription === selectColor &&
-        product.packingDescription === selectPackage
-    );
-
-    console.log("matchingProduct", matchingProduct);
-
-    if (matchingProduct) {
-      console.log("matched");
-    } else {
-      console.log("Item does not match");
-    }
-  };
 
   const uniqueData = Array.from(
     new Set(singleProduct.variants.map((item) => item.colorDescription))
@@ -50,6 +39,7 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
       (item) => item.colorDescription === name
     );
   });
+
   const uniquePackage = Array.from(
     new Set(singleProduct.variants.map((item) => item.packingDescription))
   ).map((name) => {
@@ -57,21 +47,90 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
       (item) => item.packingDescription === name
     );
   });
+  console.log("singleProduct", singleProduct);
+
+  const [selectColor, setSelectColor] = useState(
+    uniqueData[0].colorDescription
+  );
+  const [selectPackage, setSelectPackage] = useState(
+    uniqueData[0].packingDescription
+  );
+  const [grossPrice, setGrossPrice] = useState(uniqueData[0].grossPrice);
+
+  const handleAddItem = () => {
+    const data = {
+      id: singleProduct.productId,
+      item: singleProduct.itemDescription,
+      color: selectColor,
+      package: selectPackage,
+      grossPrice: grossPrice * quantity,
+      quantity: parseFloat(quantity),
+    };
+
+    let index = cartItemList.findIndex((item) => item.id === data.id);
+
+    if (index !== -1) {
+      // If the object already exists, update quantity and grossPrice
+      cartItemList[index].quantity += data.quantity;
+      cartItemList[index].grossPrice += parseFloat(data.grossPrice);
+    } else {
+      // If the object does not exist, add it to the array
+      // cartItemList.push(data);
+      addCartItem([...cartItemList, data]);
+    }
+  };
 
   console.log(uniqueData);
 
+  const handleSelectColor = (color) => {
+    setSelectColor(color);
+    if (selectColor && color) {
+      setGrossPrice(
+        getGrossPrice(selectColor, selectPackage, singleProduct.variants)
+      );
+    }
+  };
+  const handleSelectPackage = (description) => {
+    setSelectPackage(description);
+    if (selectColor && description) {
+      setGrossPrice(
+        getGrossPrice(selectColor, selectPackage, singleProduct.variants)
+      );
+    }
+  };
+
+  console.log("cartItemList", cartItemList);
+
   return (
-    <Container className="p-4">
+    <Container>
       <Offcanvas placement="end" show={open} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Sidebar Title</Offcanvas.Title>
-        </Offcanvas.Header>
+        {/* <Offcanvas.Header closeButton>
+          <Offcanvas.Title style={{ padding: "0rem 3rem" }} className="fw-bold">
+            {singleProduct.itemDescription}
+          </Offcanvas.Title>
+        </Offcanvas.Header> */}
         <Offcanvas.Body>
           <Form>
             <Row style={{ height: "100vh" }}>
-              <Col md={6} style={{ overflowY: "auto" }}>
+              <Col
+                md={6}
+                style={{
+                  overflowY: "auto",
+                  height: "100vh",
+                  // width: "30rem",
+                  borderRight: "1px dashed gray",
+                  padding: "0rem 2rem",
+                }}
+              >
+                <div className="fw-bold">{singleProduct.itemDescription}</div>
                 <div style={{ textAlign: "center" }}>
-                  <Card style={{ padding: "3rem 10rem" }}>
+                  <Card
+                    style={{
+                      padding: "3rem 8rem",
+                      // width: "25rem",
+                      backgroundColor: "rgb(220, 223, 229)",
+                    }}
+                  >
                     <span className="position-absolute top-0 end-0 mt-3 me-3">
                       <i class="bi bi-heart"></i>
                     </span>
@@ -91,14 +150,21 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
                 {/* </Col>
               <Col> */}
                 <div>
-                  <h3>#{singleProduct.itemNumber}</h3>
+                  <h5 className="text-muted">#{singleProduct.itemNumber}</h5>
                   <div className="d-flex justify-content-between">
-                    <p>{singleProduct.itemDescription}</p>
-                    <p>{singleProduct.itemDescription}</p>
+                    <span className="fw-bold">
+                      {singleProduct.itemDescription}
+                    </span>
+                    <span className="fw-bold">$ {grossPrice}</span>
+                  </div>
+                  <div className="text-muted">
+                    lorem30Ea excepteur non ipsum irure et sit anim. Eu eu non
+                    est qui deserunt amet laboris est anim aliquip anim.
+                    Pariatur velit occaecat proident laborum.
                   </div>
                 </div>
-                <div>
-                  <h5>Please Select Color:</h5>
+                <div className="mt-3">
+                  <h6 className="fw-bold">Please Select Color:</h6>
 
                   {uniqueData.map((radio, idx) => (
                     <ToggleButton
@@ -108,10 +174,10 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
                       name="radio2"
                       value={selectColor}
                       checked={selectColor === radio.colorDescription}
-                      onClick={() => setSelectColor(radio.colorDescription)}
+                      onClick={() => handleSelectColor(radio.colorDescription)}
                       className="Btn-Blue-BG"
                       style={{
-                        margin: "0.5rem",
+                        margin: "0.5rem 0.5rem 0.5rem 0rem",
                         backgroundColor:
                           selectColor === radio.colorDescription
                             ? "#FDE9EC"
@@ -127,8 +193,10 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
                     </ToggleButton>
                   ))}
                 </div>
-                <div>
-                  <h5>Please Select Packaging Description:</h5>
+                <div className="mt-3">
+                  <h6 className="fw-bold">
+                    Please Select Packaging Description:
+                  </h6>
 
                   {uniquePackage.map((obj, idx) => (
                     <ToggleButton
@@ -138,10 +206,12 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
                       name="radio1"
                       value={selectPackage}
                       checked={selectPackage === obj.packingDescription}
-                      onClick={() => setSelectPackage(obj.packingDescription)}
+                      onClick={() =>
+                        handleSelectPackage(obj.packingDescription)
+                      }
                       className="Btn0-Blue-BG"
                       style={{
-                        margin: "0.5rem",
+                        margin: "0.5rem 0.5rem 0.5rem 0rem",
                         backgroundColor:
                           selectPackage === obj.packingDescription
                             ? "#FDE9EC"
@@ -175,7 +245,9 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
                   Add to Cart
                 </Button>
               </Col>
-              <Col md={6}>hello</Col>
+              <Col md={6} style={{ padding: "0rem 2rem" }}>
+                <CartItem />
+              </Col>
             </Row>
           </Form>
         </Offcanvas.Body>
@@ -184,4 +256,16 @@ const CartModal = ({ open, handleClose, singleProduct }) => {
   );
 };
 
-export default CartModal;
+const mapStateToProp = (state) => {
+  return {
+    cartItemList: state.cartItemsReducer.cartItems,
+  };
+};
+
+const mapDispatchToProp = (dispatch) => {
+  return {
+    addCartItem: (item) => dispatch(cartActions.setCartItems(item)),
+  };
+};
+
+export default connect(mapStateToProp, mapDispatchToProp)(CartModal);

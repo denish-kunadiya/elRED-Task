@@ -30,21 +30,26 @@ const ProductList = ({ productList, loading }) => {
         <Loader />
       ) : products?.length ? (
         products.map((obj, index) => (
-          <Col md={4}>
+          <Col md={3} className="me-4 mb-5">
             <Card onClick={() => handlePopUp(obj)}>
               <span className="position-absolute top-0 end-0 mt-3 me-3">
                 <i class="bi bi-heart"></i>
               </span>
-              <Card.Img
-                variant="top"
-                src={
-                  obj?.productImages[0] ? obj?.productImages[0] : DEFAULT_IMAGE
-                }
-                height={"200px"}
-                style={{ padding: "3rem" }}
-              />
               <Card.Body>
-                <Card.Title>{obj?.itemDescription}</Card.Title>
+                <Card.Img
+                  src={
+                    obj?.productImages[0]
+                      ? obj?.productImages[0]
+                      : DEFAULT_IMAGE
+                  }
+                  // height={"150rem"}
+                  style={{ padding: "0.5rem 3rem 0.8rem 3rem" }}
+                />
+                <div className="product_heading">{obj?.itemDescription}</div>
+                <div className="product_description text-muted">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </div>
               </Card.Body>
             </Card>
           </Col>

@@ -5,15 +5,16 @@ import Slider from "react-slick";
 import { DEFAULT_IMAGE } from "../../config";
 import Loader from "../Loader";
 import RecordFound from "../RecordFound";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 var settings = {
   className: "bottom_slider",
   dots: false,
   infinite: false,
   speed: 500,
-  slidesToShow: 5,
+  slidesToShow: 4,
   slidesToScroll: 4,
   initialSlide: 0,
+  variableWidth: true,
   responsive: [
     {
       breakpoint: 1024,
@@ -45,55 +46,74 @@ var settings = {
 const ProductSlider = ({ subCategoriesList, loading }) => {
   const [subCategories, setSubCategories] = useState(subCategoriesList);
   const navigate = useNavigate();
+  const params = useParams();
+  console.log("params", params.id);
   useEffect(() => {
     setSubCategories(subCategoriesList);
   }, [subCategoriesList]);
 
-  console.log("subCategoriesList :::::::", subCategoriesList);
-  console.log("loading", loading);
+  console.log("subCategoriesList :::::::", subCategories);
 
   const handleProduct = (id) => {
     navigate(`/products/${id}`, { state: { subCategoryId: id } });
   };
 
+  const BackToHome = () => {
+    console.log("clicked");
+    navigate("/");
+  };
+
   return (
     <div>
       <Slider {...settings}>
-        <Row>
-          {loading ? (
-            <Loader />
-          ) : subCategories?.length ? (
-            subCategories?.map((obj, index) => (
-              <>
-                <Col
-                  md={5}
-                  className="me-5 sub_category_col"
-                  onClick={() => handleProduct(obj?.subCategoryId)}
-                >
-                  <Card className="">
-                    <Card.Img
-                      src={
-                        !obj?.subCategoryImageURL
-                          ? obj?.subCategoryImageURL
-                          : DEFAULT_IMAGE
-                      }
-                      alt="Card image"
-                    />
-                    {/* <Card.ImgOverlay className="sub_category_overlay">
-                    <Card.Body className="sub_category_heading">
-                      {obj?.subCategoryName}
-                    </Card.Body>
-                  </Card.ImgOverlay> */}
-                  </Card>
-                </Col>
-              </>
-            ))
-          ) : (
-            <RecordFound label="No Sub Category Found" />
-          )}
-        </Row>
+        {/* <Row> */}
+        <Col md={1} className="me-4" onClick={BackToHome}>
+          <Card
+            className="d-flex justify-content-center text-center"
+            style={{ width: "6rem", height: "5rem" }}
+          >
+            <i class="bi bi-house-door" style={{ fontSize: "3rem" }}></i>
+          </Card>
+        </Col>
+        {loading ? (
+          <Loader />
+        ) : subCategories?.length ? (
+          subCategories?.map((obj, index) => (
+            // <>
+
+            <Col
+              className="me-4"
+              style={{ width: "10rem" }}
+              onClick={() => handleProduct(obj?.subCategoryId)}
+            >
+              <Card>
+                <Card.Img
+                  src={
+                    obj?.subCategoryImageURL
+                      ? obj?.subCategoryImageURL
+                      : DEFAULT_IMAGE
+                  }
+                  alt="Card image"
+                  className={
+                    params.id === obj.subCategoryId
+                      ? "product_slider_img product_slider_img_selected"
+                      : "product_slider_img border-none"
+                  }
+                />
+                <Card.ImgOverlay className="sub_category_overlay my-overlay">
+                  <Card.Body className="sub_category_heading text-light text-center">
+                    {obj?.subCategoryName}
+                  </Card.Body>
+                </Card.ImgOverlay>
+              </Card>
+            </Col>
+            // </>
+          ))
+        ) : (
+          ""
+        )}
+        {/* </Row> */}
       </Slider>
-      <hr />
     </div>
   );
 };

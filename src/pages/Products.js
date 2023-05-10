@@ -45,12 +45,15 @@ const Products = ({ getProducts }) => {
                 </Row>
               </CardElement>
             </Col>
-            <Col md={12} className="py-2 px-0">
-              <Card style={{ height: "14vh" }}>
-                <ProductSlider />
-
-                {/* <SubCategories /> */}
-              </Card>
+            <Col md={12} height={"30vh"} className="py-2">
+              {/* <Card style={{ height: "14vh" }}> */}
+              <CardElement>
+                <Row className="scrolling_wrapper">
+                  <ProductSlider />
+                </Row>
+              </CardElement>
+              {/* <SubCategories /> */}
+              {/* </Card> */}
             </Col>
           </Row>
         </Col>
