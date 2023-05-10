@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import AfterAuth from "../HOC/AfterAuth";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import CardElement from "../Shared/CardElement";
@@ -9,11 +9,17 @@ import ProductList from "../components/Products/ProductList";
 import Sidebar from "../components/Sidebar";
 import ProductSlider from "../components/ProductSlider";
 import SubCategories from "../components/Categories/SubCategories";
+import OrderCart from "../components/Order/OrderCart";
+import PlaceOrder from "../components/Order/PlaceOrder";
+import HeadingRowCart from "../components/Order/HeadingRowCart";
+import HeadingRowOrder from "../components/Order/HeadingRowOrder";
 
 const Products = ({ getProducts }) => {
   const params = useLocation();
   let id = params.state.subCategoryId;
   const navigate = useNavigate();
+  const [refresh, setRefresh] = useState(0);
+  const [grossTotal, setGrossTotal] = useState(0);
 
   useEffect(() => {
     if (params.state !== null) {
@@ -24,6 +30,11 @@ const Products = ({ getProducts }) => {
       navigate("/");
     }
   }, [id]);
+
+  const countTotal = (items) => {
+    const total = items.reduce((acc, item) => acc + item.grossPrice, 0);
+    return setGrossTotal(total);
+  };
 
   return (
     <AfterAuth>
@@ -41,7 +52,7 @@ const Products = ({ getProducts }) => {
                   className="scrolling_wrapper overflow-auto"
                   style={{ height: "60vh" }}
                 >
-                  <ProductList />
+                  <ProductList setRefresh={setRefresh} refresh={refresh} />
                 </Row>
               </CardElement>
             </Col>
@@ -57,10 +68,21 @@ const Products = ({ getProducts }) => {
             </Col>
           </Row>
         </Col>
-        <Col md={3} className="px-2">
-          <Card style={{ height: "80vh" }}>
-            <CardElement>hello this is card</CardElement>
-          </Card>
+        <Col md={3} className="px-0">
+          {/* <Card style={{ height: "80vh" }}> */}
+          <HeadingRowCart />
+          <CardElement>
+            <OrderCart
+              setRefresh={setRefresh}
+              refresh={refresh}
+              countTotal={(items) => countTotal(items)}
+            />
+          </CardElement>
+          <HeadingRowOrder />
+          <CardElement>
+            <PlaceOrder grossTotal={grossTotal} />
+          </CardElement>
+          {/* </Card> */}
         </Col>
       </Row>
     </AfterAuth>

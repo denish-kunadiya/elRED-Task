@@ -11,7 +11,7 @@ import { DEFAULT_IMAGE } from "../../config";
 import { toast } from "react-toastify";
 import { getGrossPrice } from "../../utility/functions";
 import * as cartActions from "../../redux/cart/action";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import CartItem from "./CartItem";
 
 const CartModal = ({
@@ -20,6 +20,8 @@ const CartModal = ({
   singleProduct,
   addCartItem,
   cartItemList,
+  setRefresh,
+  refresh,
 }) => {
   const [quantity, setQuantity] = useState(12);
   const [urgentOrder, setUrgentOrder] = useState(false);
@@ -47,6 +49,7 @@ const CartModal = ({
       (item) => item.packingDescription === name
     );
   });
+
   console.log("singleProduct", singleProduct);
 
   const [selectColor, setSelectColor] = useState(
@@ -65,17 +68,33 @@ const CartModal = ({
       package: selectPackage,
       grossPrice: grossPrice * quantity,
       quantity: parseFloat(quantity),
+      allColors: uniqueData,
+      allPackages: uniquePackage,
+      image: singleProduct?.productImages[0]
+        ? singleProduct?.productImages[0]
+        : DEFAULT_IMAGE,
     };
 
-    let index = cartItemList.findIndex((item) => item.id === data.id);
-
+    let index = cartItemList.findIndex(
+      (item) =>
+        item.id === data.id &&
+        item.color === data.color &&
+        item.package === data.package
+    );
+    console.log("clicked");
     if (index !== -1) {
-      // If the object already exists, update quantity and grossPrice
-      cartItemList[index].quantity += data.quantity;
-      cartItemList[index].grossPrice += parseFloat(data.grossPrice);
+      const newQuantity = cartItemList[index].quantity + data.quantity;
+      const newGrossPrice = cartItemList[index].grossPrice + data.grossPrice;
+      const updatedItem = {
+        ...cartItemList[index],
+        quantity: newQuantity,
+        grossPrice: newGrossPrice,
+      };
+      const newCartItems = [...cartItemList];
+      newCartItems[index] = updatedItem;
+      addCartItem(newCartItems);
     } else {
       // If the object does not exist, add it to the array
-      // cartItemList.push(data);
       addCartItem([...cartItemList, data]);
     }
   };
@@ -84,34 +103,37 @@ const CartModal = ({
 
   const handleSelectColor = (color) => {
     setSelectColor(color);
-    if (selectColor && color) {
-      setGrossPrice(
-        getGrossPrice(selectColor, selectPackage, singleProduct.variants)
-      );
-    }
+    // if (selectColor && color) {
+    //   setGrossPrice(
+    //     getGrossPrice(selectColor, selectPackage, singleProduct.variants)
+    //   );
+    // }
   };
   const handleSelectPackage = (description) => {
     setSelectPackage(description);
     if (selectColor && description) {
-      setGrossPrice(
-        getGrossPrice(selectColor, selectPackage, singleProduct.variants)
-      );
+      if (getGrossPrice(selectColor, selectPackage, singleProduct.variants)) {
+        setGrossPrice(
+          getGrossPrice(selectColor, selectPackage, singleProduct.variants)
+        );
+      } else {
+        setSelectPackage(description);
+      }
     }
   };
+
+  // const color = "black";
+
+  // console.log("uniqueDataa", uniqueDataa);
 
   console.log("cartItemList", cartItemList);
 
   return (
-    <Container>
+    <Container style={{ height: "100vh" }}>
       <Offcanvas placement="end" show={open} onHide={handleClose}>
-        {/* <Offcanvas.Header closeButton>
-          <Offcanvas.Title style={{ padding: "0rem 3rem" }} className="fw-bold">
-            {singleProduct.itemDescription}
-          </Offcanvas.Title>
-        </Offcanvas.Header> */}
         <Offcanvas.Body>
           <Form>
-            <Row style={{ height: "100vh" }}>
+            <Row>
               <Col
                 md={6}
                 style={{
@@ -245,8 +267,21 @@ const CartModal = ({
                   Add to Cart
                 </Button>
               </Col>
-              <Col md={6} style={{ padding: "0rem 2rem" }}>
-                <CartItem />
+              <Col
+                md={6}
+                style={{
+                  overflowY: "auto",
+                  height: "100vh",
+                  // width: "30rem",
+                  borderRight: "1px dashed gray",
+                  padding: "0rem 2rem",
+                }}
+              >
+                <CartItem
+                  setRefresh={setRefresh}
+                  refresh={refresh}
+                  handleClose={handleClose}
+                />
               </Col>
             </Row>
           </Form>

@@ -13,7 +13,7 @@ const AfterAuth = ({ children }) => {
         <Row
           style={{
             backgroundColor: "#DCDFE5",
-            padding: "30px",
+            padding: "15px",
             height: "100vh",
           }}
         >

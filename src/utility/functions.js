@@ -10,5 +10,6 @@ export const getGrossPrice = (colorDescription, packingDescription, items) => {
     return matchedItem.grossPrice;
   } else {
     toast.error("Please select another color or packaging combination");
+    return 0;
   }
 };

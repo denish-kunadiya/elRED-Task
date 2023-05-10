@@ -7,7 +7,7 @@ import RecordFound from "../RecordFound";
 import { DEFAULT_IMAGE } from "../../config";
 import CartModal from "../Cart/CartModal";
 
-const ProductList = ({ productList, loading }) => {
+const ProductList = ({ productList, loading, setRefresh, refresh }) => {
   console.log("productList", productList);
   console.log("loading", loading);
 
@@ -63,6 +63,9 @@ const ProductList = ({ productList, loading }) => {
           open={open}
           handleClose={() => setOpen(false)}
           singleProduct={singleProduct}
+          hide={false}
+          setRefresh={setRefresh}
+          refresh={refresh}
         />
       )}
     </>

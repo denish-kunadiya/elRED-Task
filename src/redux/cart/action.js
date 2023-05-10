@@ -3,6 +3,7 @@ import { GET_CATEGORIES } from "../../helper/url";
 import { SET_CART_ITEMS_SUCCESSFUL } from "./type";
 
 export const setCartItems = (payload) => {
+  console.log("payload received", payload);
   return {
     type: SET_CART_ITEMS_SUCCESSFUL,
     payload: payload,
