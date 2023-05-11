@@ -11,6 +11,7 @@ function CartItem({
   setRefresh,
   refresh,
   handleClose,
+  setEditData,
 }) {
   const navigate = useNavigate();
   const [cart, setCart] = useState(cartItemList);
@@ -76,7 +77,7 @@ function CartItem({
             </Col>
           </Row>
           {cart.map((item, index) => (
-            <Row className="mt-2">
+            <Row className="mt-2" onClick={() => setEditData(item)}>
               <Col className=" d-flex justify-content-between">
                 <div
                   className="d-flex flex-row align-items-center"

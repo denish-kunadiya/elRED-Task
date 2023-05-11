@@ -20,6 +20,7 @@ const Products = ({ getProducts }) => {
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(0);
   const [grossTotal, setGrossTotal] = useState(0);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (params.state !== null) {
@@ -52,7 +53,12 @@ const Products = ({ getProducts }) => {
                   className="scrolling_wrapper overflow-auto"
                   style={{ height: "60vh" }}
                 >
-                  <ProductList setRefresh={setRefresh} refresh={refresh} />
+                  <ProductList
+                    setRefresh={setRefresh}
+                    refresh={refresh}
+                    open={open}
+                    setOpen={setOpen}
+                  />
                 </Row>
               </CardElement>
             </Col>
@@ -70,7 +76,7 @@ const Products = ({ getProducts }) => {
         </Col>
         <Col md={3} className="px-0">
           {/* <Card style={{ height: "80vh" }}> */}
-          <HeadingRowCart />
+          <HeadingRowCart open={open} setOpen={setOpen} />
           <CardElement>
             <OrderCart
               setRefresh={setRefresh}

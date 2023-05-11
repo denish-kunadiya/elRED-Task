@@ -7,12 +7,19 @@ import RecordFound from "../RecordFound";
 import { DEFAULT_IMAGE } from "../../config";
 import CartModal from "../Cart/CartModal";
 
-const ProductList = ({ productList, loading, setRefresh, refresh }) => {
+const ProductList = ({
+  productList,
+  loading,
+  setRefresh,
+  refresh,
+  open,
+  setOpen,
+}) => {
   console.log("productList", productList);
   console.log("loading", loading);
 
   const [products, setProducts] = useState(productList);
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [singleProduct, setSingleProduct] = useState(null);
   const navigate = useNavigate();
   useEffect(() => {

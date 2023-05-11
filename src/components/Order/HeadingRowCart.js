@@ -1,7 +1,7 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
 
-const HeadingRowCart = () => {
+const HeadingRowCart = ({ open, setOpen }) => {
   return (
     <Row
       className="mt-0 mb-2 "
@@ -31,7 +31,9 @@ const HeadingRowCart = () => {
               class="bi bi-pencil-fill px-1"
               style={{ fontSize: "0.7rem" }}
             ></i>
-            <span style={{ fontSize: "0.7rem" }}>Edit</span>
+            <span style={{ fontSize: "0.7rem" }} onClick={() => setOpen(true)}>
+              Edit
+            </span>
           </div>
         </div>
       </Col>

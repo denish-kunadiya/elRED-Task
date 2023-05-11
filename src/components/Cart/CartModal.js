@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -23,26 +23,39 @@ const CartModal = ({
   setRefresh,
   refresh,
 }) => {
-  const [quantity, setQuantity] = useState(12);
   const [urgentOrder, setUrgentOrder] = useState(false);
 
-  const handleQuantityChange = (event) => {
-    setQuantity(event.target.value);
-  };
-
-  const handleUrgentOrderChange = (event) => {
-    setUrgentOrder(event.target.checked);
-  };
-
-  const [grossPrice, setGrossPrice] = useState();
-
   // **************************************************************************************
+  const [editData, setEditData] = React.useState(null);
+  const [edit, setEdit] = React.useState(false);
   const [selectedCombination, setSelectedCombination] = React.useState(null);
-  const [selectedColor, setSelectedColor] = React.useState(null);
-  const [selectedPackage, setSelectedPackage] = React.useState(null);
+  const [selectedColor, setSelectedColor] = React.useState(
+    editData ? editData.color : null
+  );
+  const [selectedPackage, setSelectedPackage] = React.useState(
+    editData ? editData.package : null
+  );
+  console.log("selectedColor", selectedColor);
+
+  const [quantity, setQuantity] = useState(editData ? editData.quantity : 12);
+
+  const [grossPrice, setGrossPrice] = useState(
+    editData ? editData.grossPrice : null
+  );
   const [availablePackaging, setAvailablePackaging] = React.useState([]);
 
+  useEffect(() => {
+    if (editData) {
+      setSelectedColor(editData.color);
+      setSelectedPackage(editData.package);
+      setQuantity(editData.quantity);
+      setAvailablePackaging(editData.allPackages);
+    }
+  }, [editData]);
+
   console.log("selectedPackage", selectedPackage);
+  console.log("editData", editData);
+  console.log("availablePackaging", availablePackaging);
 
   const handleSelectColors = (color) => {
     console.log("color", color);
@@ -79,7 +92,7 @@ const CartModal = ({
     );
     console.log("matchingCombination", matchingCombination);
     setSelectedCombination(matchingCombination);
-    setGrossPrice(Number(matchingCombination.grossPrice));
+    setGrossPrice(parseFloat(matchingCombination.grossPrice));
   };
 
   const uniqueColors = Array.from(
@@ -88,42 +101,105 @@ const CartModal = ({
 
   // **************************************************************************************
 
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
+  };
+
+  const handleUrgentOrderChange = (event) => {
+    setUrgentOrder(event.target.checked);
+  };
+
   const handleAddItem = () => {
-    const data = {
-      id: singleProduct.productId,
-      item: singleProduct.itemDescription,
-      color: selectedColor,
-      package: selectedPackage,
-      grossPrice: grossPrice * quantity,
-      quantity: parseFloat(quantity),
-      allColors: uniqueColors,
-      allPackages: availablePackaging,
-      image: singleProduct?.productImages[0]
-        ? singleProduct?.productImages[0]
-        : DEFAULT_IMAGE,
-    };
-    console.log("data", data);
-    let index = cartItemList.findIndex(
-      (item) =>
-        item.id === data.id &&
-        item.color === data.color &&
-        item.package === data.package
-    );
     console.log("clicked");
-    if (index !== -1) {
-      const newQuantity = cartItemList[index].quantity + data.quantity;
-      const newGrossPrice = cartItemList[index].grossPrice + data.grossPrice;
-      const updatedItem = {
-        ...cartItemList[index],
-        quantity: newQuantity,
-        grossPrice: newGrossPrice,
-      };
-      const newCartItems = [...cartItemList];
-      newCartItems[index] = updatedItem;
-      addCartItem(newCartItems);
+    if (!selectedColor) {
+      toast.error("Please select item color");
+    } else if (!selectedPackage) {
+      toast.error("Please select item packing type.");
+    } else if (!quantity) {
+      toast.error("Please select quantity");
+    } else if (quantity < 12) {
+      toast.error("Quantity must be more than 12.");
+    } else if (quantity > 100) {
+      toast.error("Quantity must be less than 100.");
     } else {
-      // If the object does not exist, add it to the array
-      addCartItem([...cartItemList, data]);
+      console.log("singleProduct", singleProduct);
+      if (!editData) {
+        const data = {
+          id: editData ? editData.id : selectedCombination._id,
+          item: singleProduct.itemDescription,
+          color: selectedColor,
+          package: selectedPackage,
+          grossPrice: grossPrice * quantity,
+          price: grossPrice,
+          quantity: parseFloat(quantity),
+          allColors: uniqueColors,
+          allPackages: availablePackaging,
+          image: singleProduct?.productImages[0]
+            ? singleProduct?.productImages[0]
+            : DEFAULT_IMAGE,
+        };
+        let index = cartItemList.findIndex(
+          (item) =>
+            item.id === data.id &&
+            item.color === data.color &&
+            item.package === data.package
+        );
+        if (index !== -1) {
+          const newQuantity = cartItemList[index].quantity + data.quantity;
+          const newGrossPrice =
+            cartItemList[index].grossPrice + data.grossPrice;
+          const updatedItem = {
+            ...cartItemList[index],
+            quantity: newQuantity,
+            grossPrice: newGrossPrice,
+          };
+          const newCartItems = [...cartItemList];
+          newCartItems[index] = updatedItem;
+          addCartItem(newCartItems);
+        } else {
+          // If the object does not exist, add it to the array
+          addCartItem([...cartItemList, data]);
+        }
+      } else {
+        const data = {
+          id: editData.id,
+          item: singleProduct.itemDescription,
+          color: selectedColor,
+          package: selectedPackage,
+          grossPrice: grossPrice * quantity,
+          price: grossPrice,
+          quantity: parseFloat(quantity),
+          allColors: uniqueColors,
+          allPackages: availablePackaging,
+          image: editData ? editData.image : DEFAULT_IMAGE,
+        };
+        let index = cartItemList.findIndex(
+          (item) =>
+            item.id === editData.id &&
+            item.color === editData.color &&
+            item.package === editData.package
+        );
+        console.log("index", index);
+        if (index !== -1) {
+          const newQuantity = cartItemList[index].quantity + data.quantity;
+          const newGrossPrice =
+            cartItemList[index].grossPrice + data.grossPrice;
+          const updatedItem = {
+            ...cartItemList[index],
+            quantity: data.quantity,
+            grossPrice: data.grossPrice,
+            color: selectedColor,
+            package: selectedPackage,
+          };
+          const newCartItems = [...cartItemList];
+          newCartItems[index] = updatedItem;
+          addCartItem(newCartItems);
+          setEditData(null);
+        } else {
+          // If the object does not exist, add it to the array
+          addCartItem([...cartItemList, data]);
+        }
+      }
     }
   };
 
@@ -143,7 +219,9 @@ const CartModal = ({
                   padding: "0rem 2rem",
                 }}
               >
-                <div className="fw-bold">{singleProduct.itemDescription}</div>
+                <div className="fw-bold">
+                  {editData ? editData.item : singleProduct.itemDescription}
+                </div>
                 <div style={{ textAlign: "center" }}>
                   <Card
                     style={{
@@ -176,7 +254,9 @@ const CartModal = ({
                     <span className="fw-bold">
                       {singleProduct.itemDescription}
                     </span>
-                    <span className="fw-bold">$ {grossPrice}</span>
+                    <span className="fw-bold">
+                      $ {editData ? editData.price : grossPrice}
+                    </span>
                   </div>
                   <div className="text-muted">
                     lorem30Ea excepteur non ipsum irure et sit anim. Eu eu non
@@ -270,6 +350,7 @@ const CartModal = ({
                   setRefresh={setRefresh}
                   refresh={refresh}
                   handleClose={handleClose}
+                  setEditData={setEditData}
                 />
               </Col>
             </Row>
