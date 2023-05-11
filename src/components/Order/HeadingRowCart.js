@@ -19,8 +19,20 @@ const HeadingRowCart = () => {
             <div className="fw-normal mb-0">Quantity</div>
           </div>
         </div>
-        <div style={{ width: "100px" }}>
+        <div>
           <div className="mb-0">Price</div>
+        </div>
+        <div>
+          <div
+            className="mb-0 d-flex align-items-center"
+            style={{ color: "#BE212A" }}
+          >
+            <i
+              class="bi bi-pencil-fill px-1"
+              style={{ fontSize: "0.7rem" }}
+            ></i>
+            <span style={{ fontSize: "0.7rem" }}>Edit</span>
+          </div>
         </div>
       </Col>
     </Row>

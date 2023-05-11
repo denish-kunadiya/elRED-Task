@@ -34,7 +34,7 @@ function OrderCart({ cartItemList, setRefresh, refresh, countTotal }) {
       ) : (
         <>
           {cart.slice(0, 4).map((item, index) => (
-            <Row className="mt-2">
+            <Row className="mt-2" style={{ paddingRight: "2rem" }}>
               <Col className=" d-flex justify-content-between">
                 <div
                   className="d-flex flex-row align-items-center"
